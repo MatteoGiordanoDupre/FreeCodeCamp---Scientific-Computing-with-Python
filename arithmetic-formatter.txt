@@ -1,0 +1,86 @@
+problems = ["44 + 815", "909 - 2", "45 + 43", "123 + 49", "888 + 40", "653 + 87"]
+
+def check_operand(op): # checks if op is valid as to nature and length
+    # if operand contains non digits return 1
+    if (not op.isdigit()): return 1
+    # if operand is longer than 4 digits return 2 
+    if len(op) > 4: return 2 
+    # else return 0
+    return 0
+
+def check_operator(op): #checks if operator is '+' or '-'
+    #if operator is correct return True
+    return op in ['+', '-']
+
+
+
+def arithmetic_arranger(problems, show_answers=False):
+    output = ''
+    operand1_list = []
+    operand2_list = []
+    operator_list = []
+    result_list = []
+    widths_list = []
+    # check the number of problems
+    if len(problems) > 5:
+        return 'Error: Too many problems.'
+    # for each of the problems
+    for problem in problems: 
+        # split it in its elements
+        parts = problem.split()
+        # for each element of the problem
+        operand1 = parts[0]
+        operator = parts[1]
+        operand2 = parts[2]
+        # if the first operand is ok put it in the list of operand1
+        if check_operand(operand1) == 0:
+            operand1_list.append(operand1)
+        elif check_operand(operand1) == 1:
+            return 'Error: Numbers must only contain digits.'
+        elif check_operand(operand1) == 2:
+            return 'Error: Numbers cannot be more than four digits.'
+        # if the operator is ok put it in the list of operators
+        if check_operator(operator):
+            operator_list.append(operator)
+        else:
+            return "Error: Operator must be '+' or '-'."
+        # if the second operand is ok put it in the list of operand2
+        if check_operand(operand2) == 0:
+            operand2_list.append(operand2)
+        elif check_operand(operand2) == 1:
+            return 'Error: Numbers must only contain digits.'
+        elif check_operand(operand2) == 2:
+            return 'Error: Numbers cannot be more than four digits.'
+    # if show_answers = True -> compute and store results in the list of results
+        if show_answers: 
+            if operator == '+':
+                result_list.append(str(int(operand1) + int(operand2)))
+            else:
+                result_list.append(str(int(operand1) - int(operand2)))
+    
+        widths_list.append(max(len(operand1), len(operand2)) + 2)
+    
+    # OUTPUT FORMATTING
+    line1 = ""
+    line2 = ""
+    line3 = ""
+    line4 = ""
+    for i,_ in enumerate(problems):
+        line1 += operand1_list[i].rjust(widths_list[i]) + '    '
+        line2 += operator_list[i] + operand2_list[i].rjust(widths_list[i] - 1) + '    '
+        line3 += '-' * widths_list[i] + '    '
+        
+        if show_answers:
+            line4 += result_list[i].rjust(widths_list[i]) + '    '
+        
+    line1 = line1[:-4]
+    line2 = line2[:-4]
+    line3 = line3[:-4]
+    line4 = line4[:-4]
+    
+    output = line1 + '\n' + line2 + '\n' + line3 
+    
+    if show_answers:
+        output += '\n' + line4
+        
+    return output

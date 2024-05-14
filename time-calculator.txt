@@ -1,0 +1,66 @@
+def add_time(start, duration, start_day = False):
+    
+    #input: a start time in xx:yy AM/PM format
+    #output: hour:minutes AM/PM, day_of_week, (next day, x days later)
+    day_half_list = ['AM', 'PM']
+    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    #first we have to split the start and duration into its single components(minutes and hours)
+    hours, minutes, day_half = start.replace(' ', ':').split(':')
+    add_hours, add_minutes = duration.split(':')
+    
+    
+    #if the sum between the minutes exceeds 59, then one additional hour should be added to the sum between the hours 
+    sum_minutes = int(minutes) + int(add_minutes)
+    sum_hours = int(hours) + int(add_hours)
+    final_minutes = "{:02d}".format(sum_minutes % 60)
+    
+    
+    if sum_minutes > 59:
+        sum_hours += 1
+        
+    final_hours = sum_hours % 12
+    
+    if final_hours == 0:
+        final_hours = 12
+    
+    
+    #Correct day half: Solution found on the other compiler page. We just need to extract the int from the division between the sum of hours and 12 
+    if sum_hours < 12 or int(sum_hours/12)%2 == 0:
+        final_day_half = day_half
+    else:
+        final_day_half = day_half_list[(day_half_list.index(day_half) + 1) % len(day_half_list)]
+    
+   #x days later: if the current day half is AM, then the amount of days passing is given by  the numbers between 24 and 48, if its PM and the time is between 1 and 11 its about the numbers between 12 and 36
+    if day_half == 'AM' and int(hours) == 12:
+        days_later = int(sum_hours/36)
+    if day_half == 'AM' and 0 < int(hours) < 12:
+        days_later = int(sum_hours/24)
+    if day_half == 'PM':
+        days_later = int((sum_hours + 12)/24)
+    
+    #optional result: the actual computed day. Every x time the sum of hours is a multiple of 24, we advance of x days from the starting day
+    if start_day:
+        final_day = days[(days.index(start_day.casefold()) + days_later)%7].title()
+    
+    
+    
+    if start_day == False and days_later > 1:
+        new_time = f'{final_hours}:{final_minutes} {final_day_half} ({days_later} days later)'
+    elif start_day == False and days_later == 1:
+        new_time = f'{final_hours}:{final_minutes} {final_day_half} (next day)'
+    elif start_day == False and days_later == 0:
+        new_time = f'{final_hours}:{final_minutes} {final_day_half}'
+    
+    elif start_day and days_later > 1:
+        new_time = f'{final_hours}:{final_minutes} {final_day_half}, {final_day} ({days_later} days later)'
+    elif start_day and days_later == 1:
+        new_time = f'{final_hours}:{final_minutes} {final_day_half}, {final_day} (next day)'
+    elif start_day and days_later == 0:
+        new_time = f'{final_hours}:{final_minutes} {final_day_half}, {final_day}'
+    
+    
+    
+    return new_time
+    
+
+
