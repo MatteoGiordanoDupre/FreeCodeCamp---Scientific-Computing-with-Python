@@ -32,11 +32,11 @@ def add_time(start, duration, start_day = False):
     
    #x days later: if the current day half is AM, then the amount of days passing is given by  the numbers between 24 and 48, if its PM and the time is between 1 and 11 its about the numbers between 12 and 36
     if day_half == 'AM' and int(hours) == 12:
-        days_later = int(sum_hours/36)
+        days_later = sum_hours//36
     if day_half == 'AM' and 0 < int(hours) < 12:
-        days_later = int(sum_hours/24)
+        days_later = sum_hours//24
     if day_half == 'PM':
-        days_later = int((sum_hours + 12)/24)
+        days_later = (sum_hours + 12)//24
     
     #optional result: the actual computed day. Every x time the sum of hours is a multiple of 24, we advance of x days from the starting day
     if start_day:
